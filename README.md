@@ -25,7 +25,6 @@ Some other codes for calculating ground tracks of Cubesat altimeter constellatio
 
 ## Usage of the files
 
-# Performance package
 1) SSH_accuracy_performance.py
 It is used to calculate the absolute SSH and relative SSH accuracy. Three constellations are calculated as explained in the heading of the file.
 The error spectra considered here are mainly from the SWOT system analysis. The reference is: [RD].	Daniel Esteban Fernandez, et al. SWOT Project Mission Performance and Error Budget, JPL D-79084, 2017. 
@@ -90,15 +89,15 @@ Output: relationship between the bandwidth and the max. critical baseline under 
 
 Case 3:
 Input: when the incidence angle is a vector
-Output: relationship between the incidence angle and the altimeter noise.
+Output: the relationship between the incidence angle and the altimeter noise.
 
 Case 4:
 Input: when the incidence angle is a vector
-Output: the distance between the microsat and cubesat as a function of the incidence angle at near, far, and average range.
+Output: the distance between the microsat and CubeSat as a function of the incidence angle at near, far, and average range.
 
 Case 5:
 Input: when the incidence angle and the bandwidth are vectors
-Output: relationship between the incidence angle and the baseline roll angle error under different bandwidths.
+Output: the relationship between the incidence angle and the baseline roll angle error under different bandwidths.
 
 7) main_function.py
 This is the main file to calculate the required peak and average power and data rate (before and after a bit on-board processing). It can also provides the level of altimeter noise. The input is the system parameters, concept (three concepts), working mode (SAR mode or not, or interleaved mode). 
@@ -132,13 +131,13 @@ Case 7:
 Input: when the incidence angle is a vector
 Output: the required power, data rates, and altimeter noise as a function of SNR under different incidence angles.
 
-Performance.py and the cal_functions.py are two files to support the calculation of the reqirement and performance in the main_function.py.
+Performance.py and the cal_functions.py are two files to support the calculation of the requirement and performance in the main_function.py.
 
 8) modes_comparison.py
-It works as the same way as the main_function.py. The difference here is we need to input three concepts to compare the required power and data rate, and the altimeter noise level.
+It works in the same way as the main_function.py. The difference here is we need to input three concepts to compare the required power and data rate, and the altimeter noise level.
 
 9) parameter_analysis.py
-It also works as the same way as the main_function.py. Nevertheless, the default requirement curvea are not as functions of SNR. The power, data rate, and the altimeter noise are as functions of:
+It also works in the same way as the main_function.py. Nevertheless, the default requirement curves are not as functions of SNR. The power, data rate, and the altimeter noise are as functions of:
 Case 1: coherent pulse number;
 Case 2: burst interval time;
 Case 3: bandwidth;
