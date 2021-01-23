@@ -1,0 +1,9 @@
+README.md
+setup.py
+ALTCUBTOOL.egg-info/PKG-INFO
+ALTCUBTOOL.egg-info/SOURCES.txt
+ALTCUBTOOL.egg-info/dependency_links.txt
+ALTCUBTOOL.egg-info/requires.txt
+ALTCUBTOOL.egg-info/top_level.txt
+ocs_io/__init__.py
+ocs_io/cfg.py

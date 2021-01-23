@@ -10,10 +10,10 @@ This file focuses on the performance under different modes
 import numpy as np
 from matplotlib import pyplot as plt
 import ocs_io as tpio
-from performance.performance import performance_tool
+from performance import performance_tool
 
 # Setting up paths
-cfg_file = r"D:\research\TU Delft\programs\Alticube_tool\Alticubes'tool\parameters.cfg"
+cfg_file = r"D:\research\TU Delft\programs\ALTCUBTOOL\cfg\parameters.cfg"
 cfg = tpio.ConfigFile(cfg_file)
 
 

@@ -14,13 +14,13 @@ Three concepts are considered here
 import numpy as np
 from matplotlib import pyplot as plt
 import ocs_io as tpio
-from performance.performance import performance_tool
+from performance import performance_tool
 
 
-cfg_file = r"D:\research\TU Delft\programs\Alticube_tool\Alticubes'tool\parameters.cfg"
+cfg_file = r"D:\research\TU Delft\programs\ALTCUBTOOL\cfg\parameters.cfg"
 cfg = tpio.ConfigFile(cfg_file)
-concept = 'Specular Constellation'#'Comb Constellation'##"Specular Constellation"#cfg.sim.concept
-(P_r, P_a, ac, raw_data_rate, proc_rate) = performance_tool(cfg_file, concept, 
+#concept = 'Specular Constellation'#'Comb Constellation'##"Specular Constellation"#cfg.sim.concept
+(P_r, P_a, ac, raw_data_rate, proc_rate) = performance_tool(cfg_file, cfg.sim.concept, 
                                                             SAR_mode_enable=False, 
                                                             interleaved_mode_enable=False)
 
@@ -41,7 +41,7 @@ if (np.size(cfg.radar.az_ant)>1) or (np.size(cfg.radar.microsat_antenna))>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required peak power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 10)
     plt.grid()
@@ -60,7 +60,7 @@ if (np.size(cfg.radar.az_ant)>1) or (np.size(cfg.radar.microsat_antenna))>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required average power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 2)
     plt.grid()
@@ -80,7 +80,7 @@ if (np.size(cfg.radar.az_ant)>1) or (np.size(cfg.radar.microsat_antenna))>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Accuracy (cm)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
 #    plt.ylim(2, 5)
     plt.grid()
@@ -98,7 +98,7 @@ if np.size(cfg.radar.pulse_coh_bur)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required peak power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 2)
     plt.grid()
@@ -114,7 +114,7 @@ if np.size(cfg.radar.pulse_coh_bur)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required average power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 0.5)
     plt.grid()
@@ -127,7 +127,7 @@ if np.size(cfg.radar.pulse_coh_bur)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Accuracy (cm)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(2, 8)
     plt.grid()
@@ -145,7 +145,7 @@ if np.size(cfg.radar.bur_rep_int)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required peak power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 10)
     plt.grid()
@@ -161,7 +161,7 @@ if np.size(cfg.radar.bur_rep_int)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required average power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 0.5)
     plt.grid()
@@ -174,7 +174,7 @@ if np.size(cfg.radar.bur_rep_int)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Accuracy (cm)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(1, 6)
     plt.grid()
@@ -191,7 +191,7 @@ if np.size(cfg.radar.bandwidth)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required peak power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 1)
     plt.grid()
@@ -207,7 +207,7 @@ if np.size(cfg.radar.bandwidth)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required average power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 0.1)
     plt.grid()
@@ -221,7 +221,7 @@ if np.size(cfg.radar.bandwidth)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Accuracy (cm)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.grid()
     
@@ -239,7 +239,7 @@ if np.size(cfg.orbit.alt)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required peak power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 2)
     plt.grid()
@@ -255,7 +255,7 @@ if np.size(cfg.orbit.alt)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required average power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 0.5)
     plt.grid()
@@ -268,7 +268,7 @@ if np.size(cfg.orbit.alt)>1:
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Accuracy (cm)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(2, 8)
     plt.grid()
@@ -276,20 +276,20 @@ if np.size(cfg.orbit.alt)>1:
     
     # SNR & interferometric accuracy   
     # plot figures
-    if cfg.sim.interferometer_enable:
-        leg = []
-        plt.figure()
-        for i in range(ac.shape[1]):
-            plt.plot(cfg.loss.SNR, cross_res[:,i])
-            leg = np.append(leg, ["Orbit height=%d km"%(cfg.orbit.alt[i]/1000)])
-        plt.xticks(fontsize=16)
-        plt.yticks(fontsize=16)
-        plt.xlabel('SNR (dB)', fontsize=16)
-        plt.ylabel('Cross-track resolution (m)', fontsize=16)
-        plt.title(concept)
-        plt.legend(leg)
-    #    plt.ylim(0, 0.5)
-        plt.grid()
+#    if cfg.sim.interferometer_enable:
+#        leg = []
+#        plt.figure()
+#        for i in range(ac.shape[1]):
+#            plt.plot(cfg.loss.SNR, cross_res[:,i])
+#            leg = np.append(leg, ["Orbit height=%d km"%(cfg.orbit.alt[i]/1000)])
+#        plt.xticks(fontsize=16)
+#        plt.yticks(fontsize=16)
+#        plt.xlabel('SNR (dB)', fontsize=16)
+#        plt.ylabel('Cross-track resolution (m)', fontsize=16)
+#        plt.title(concept)
+#        plt.legend(leg)
+#    #    plt.ylim(0, 0.5)
+#        plt.grid()
 #    leg = []
 #    plt.figure()
 #    for i in range(ac.shape[1]):
@@ -316,7 +316,7 @@ if (np.size(cfg.radar.off_nadir)>1):
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required peak power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 200)
     plt.grid()
@@ -332,22 +332,22 @@ if (np.size(cfg.radar.off_nadir)>1):
     plt.yticks(fontsize=16)
     plt.xlabel('SNR (dB)', fontsize=16)
     plt.ylabel('Required average power (W)', fontsize=16)
-    plt.title(concept)
+    plt.title(cfg.sim.concept)
     plt.legend(leg)
     plt.ylim(0, 100)
     plt.grid()
-if np.size(cfg.radar.baseline)>1:    
-    # SNR & interferometric accuracy   
-    # plot figures
-    leg = []
-    plt.figure()
-    for i in range(cfg.radar.baseline.shape[0]):
-        plt.plot(cfg.loss.SNR, cross_res[:,i])
-        leg = np.append(leg, ["Baseline length=%.1f m"%(cfg.radar.baseline[i])])
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('SNR (dB)', fontsize=16)
-    plt.ylabel('Cross-track resolution (m)', fontsize=16)
-    plt.title(concept)
-    plt.legend(leg)
-    plt.grid()
+#if np.size(cfg.radar.baseline)>1:    
+#    # SNR & interferometric accuracy   
+#    # plot figures
+#    leg = []
+#    plt.figure()
+#    for i in range(cfg.radar.baseline.shape[0]):
+#        plt.plot(cfg.loss.SNR, cross_res[:,i])
+#        leg = np.append(leg, ["Baseline length=%.1f m"%(cfg.radar.baseline[i])])
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('SNR (dB)', fontsize=16)
+#    plt.ylabel('Cross-track resolution (m)', fontsize=16)
+#    plt.title(concept)
+#    plt.legend(leg)
+#    plt.grid()

@@ -19,7 +19,7 @@ from error_functions import re_acuracy, re_acuracy_data,re_wet_one_radiometer, t
 from error_functions import re_acuracy_orbit_data,altimeter_rand, altimeter_rand_insar, re_accuracy_orbit_slope
 
 # Setting up paths
-cfg_file = r"D:\research\TU Delft\programs\Alticube_tool\Alticubes'tool\parameters.cfg"
+cfg_file = r"D:\research\TU Delft\programs\ALTCUBTOOL\cfg\parameters.cfg"
 cfg = tpio.ConfigFile(cfg_file)
 
 # Input parameters
@@ -31,20 +31,20 @@ pul_rad = np.sqrt(2 * cfg.orbit.alt * pw)
 # Pulse lim. resolution [m]
 plu_res = 2 * pul_rad
 # Weather parameters. It is used for calculate absolute SSB error
-SWH = 2 #[m] 
+SWH = cfg.ssh.SWH #[m] 
 # Antenna parameters
-ant = 0.5 #[m]
+ant = cfg.ssh.ant #[m]
 #dis = l0 / ant * cfg.orbit.alt
-D = 35000 # [km] distance between the microsat and the cubesat for interferometric case
-B = 100 # [m] interferometric basline
-Bpe = 1e-3 # [m] baseline roll accuracy
-SNR = 11 # [dB]
-gamma = 0.3 # coherence of the interfeograms from SWOT
+D = cfg.ssh.D # [km] distance between the microsat and the cubesat for interferometric case
+B = cfg.ssh.B # [m] interferometric basline
+Bpe = cfg.ssh.Bpe # [m] baseline roll accuracy
+SNR = cfg.ssh.SNR # [dB]
+gamma = cfg.ssh.gamma # coherence of the interfeograms from SWOT
 
 # For the cubesat and microsat, the input parameters are
 # antenna length
-D_micro_c = 0.5 #[m]
-D_micro_al = 1  #[m]
+D_micro_c = cfg.ssh.D_micro_c #[m]
+D_micro_al = cfg.ssh.D_micro_al  #[m]
 foot_print  = l0 / D_micro_c * cfg.orbit.alt # calculating resolution
 # CALCULATING SYSTEM GEOMETRY
 a_bw = l0 / ant
@@ -54,11 +54,11 @@ inc = np.degrees((off_nadir_max + off_nadir_near) / 2) # average off_nadir angle
 res_insar = pw / np.sin(np.radians(inc)) # range resolution in interferometric case
 
 # azimuth resolving scale for alticubes interferometric concept
-scale_az = 1000#np.linspace(1000, 50000, 20)#5000
-up_bound = 1000000 # 1000 km, a fixed value
+scale_az = cfg.ssh.scale_az#np.linspace(1000, 50000, 20)#5000
+up_bound = cfg.ssh.up_bound # 1000 km, a fixed value
 # azimuth resolving scale for alticubes concept1 and 2 
 # It is always evaluated by 1s averaging in along-track direction (refer to altika/crosat-2 manuscript)
-scale_az1 = 7500#np.linspace(1000, 50000, 20)#5000
+scale_az1 = cfg.ssh.scale_az1#np.linspace(1000, 50000, 20)#5000
 
 ## pixel spacing in SWOT system
 #pixel_SWOT = 7500 # cross-track averaging to 7.5km in SWOT
@@ -76,18 +76,18 @@ factor3 = np.sqrt(22250 / look_num) # 22250 from the SWOT possible averaging swa
 N = scale_az / plu_res
 
 # Accuracy initialization, it is mainly for the absolute accuracy
-dis = 6340#50000
+dis = cfg.ssh.dis#50000
 # The following power spectral indexes are from SWOT
-p_ssb = -8/3
-p_dr = -3
-p_dw = -8/3
-p1 = -1.79
-p2 = -0.814
-pi= -2.1
+p_ssb = cfg.ssh.p_ssb
+p_dr = cfg.ssh.p_dr
+p_dw = cfg.ssh.p_dw
+p1 = cfg.ssh.p1
+p2 = cfg.ssh.p2
+pi= cfg.ssh.pi
 
 # axis for plot
-Nx = 401
-Ny = 301
+Nx = cfg.ssh.Nx
+Ny = cfg.ssh.Ny
 gridx = np.linspace(-2200000, 2200000, Nx)
 gridy = np.linspace(-1650000, 1650000, Ny)
 #plot sign
@@ -113,8 +113,8 @@ SSB_data_comb = re_acuracy_data(SSB_ab*np.sqrt(2),p_ssb, Nx, Ny) # np.sqrt(2) is
 SSB_data_insar = re_acuracy_data(SSB_r,p_ssb, Nx, Ny)
 
 # Source 2: dry tropospheric delay
-dd_ab = 0.7 / factor
-atp_a = 0.7 / factor #It is a semi-variance of mbar. A correction based on some external measurements
+dd_ab = cfg.ssh.drabs / factor
+atp_a = cfg.ssh.drabs / factor #It is a semi-variance of mbar. A correction based on some external measurements
 dd_abr = np.sqrt(atp_a * 2) * 2.277 /10
 dd_r = np.sqrt(factor3 * 5 * 1e-9 / 2 * ((up_bound/1000)**2 - (scale_az / 1000)**2))
 dd_r1 = dd_abr
@@ -124,8 +124,8 @@ dd_data_insar = re_acuracy_data(dd_r,p_dr, Nx, Ny)
 
 # Source 3: wet delay
 # They are the functions from SWOT. It is the correction after 1-beam radiometer.
-dw_ab = 1.2
-dw_r1 = 0.4
+dw_ab = cfg.ssh.dw_ab
+dw_r1 = cfg.ssh.dw_r1
 if (np.size(scale_az)==1):
     if scale_az>1000/0.0023:
         dw_r = np.sqrt((9.5e-5 / 0.79 * ((up_bound/1000)**0.79 - (scale_az / 1000)**0.79)) * factor3)
@@ -152,8 +152,8 @@ dw_data_comb = re_acuracy_data(dw_ab*np.sqrt(2),p_dw, Nx, Ny)
 dw_data_insar = re_acuracy_data(dw_r,p_dr, Nx, Ny)
    
 # Source 4: ionospheric delay
-di_ab = 0.3 # [m] After the correction based on the Ionex model
-di_abr = 2 * 40.28 / cfg.radar.f0**2 * 0.1e16 * 100 # It is corrected based on TEC measurements
+di_ab = cfg.ssh.di_ab # [m] After the correction based on the Ionex model
+di_abr = 2 * 40.28 / cfg.radar.f0**2 * cfg.ssh.di_rtec * 100 # It is corrected based on TEC measurements
 di_r = np.sqrt(factor3 * 1e-8 / 1.1 * ((up_bound/1000)**1.1 - (scale_az / 1000)**1.1))
 di_r1 = di_abr
 di_rswot=np.sqrt(re_acuracy(dis/1000, di_ab, pi))
@@ -173,8 +173,8 @@ n_data_insar = altimeter_rand_insar(Nx, Ny)
 n_data_insar = n_data_insar / np.std(n_data_insar) * n_r
 
 # Source 6: orbit error
-n_orb_ab = 2 # These values have already been provided by the 1s averaging in SWOT/Altika documents
-n_orb_abr = 0.09
+n_orb_ab = cfg.ssh.n_orb_ab # These values have already been provided by the 1s averaging in SWOT/Altika documents
+n_orb_abr = cfg.ssh.n_orb_abr
 # basline roll error for concept 3
 kf = Bpe / B * cfg.orbit.alt * 100
 n_orb_r = (off_nadir_max - off_nadir_near) * kf / 2  #np.sqrt(factor3 * 1.9631 / 0.9922 * 1e-5 * ((up_bound/1000)**0.9922 - (scale_az / 1000)**0.9922)) 
@@ -186,8 +186,8 @@ grid_swath = np.linspace(off_nadir_near, off_nadir_max, 101)
 n_orb_data_insar = re_accuracy_orbit_slope(gridx, gridy, kf)
 
 # Source 7: timing error
-st_os = 1e-10 # Depending on the stability of the oscillator  
-st_syn = 1e-10  # Depending on the stability of the oscillator 
+st_os = cfg.ssh.st_os # Depending on the stability of the oscillator  
+st_syn = cfg.ssh.st_syn  # Depending on the stability of the oscillator 
 n_syn = (st_syn / 2) * const.c * 100 / (scale_az1 / plu_res)
 n_t_ab1 = (st_os / 2) * const.c * 100 / (scale_az1 / plu_res)
 n_t_ab2 = np.sqrt(n_t_ab1**2 + n_syn**2)
@@ -207,161 +207,161 @@ T_ssh_r1 = np.sqrt(SSB_r1**2 + dd_r1**2 + dw_rswot**2 + di_rswot**2 + n_r1**2 + 
 T_ssh_r2 = np.sqrt(SSB_r1**2 + dd_r1**2 + dw_rswot**2 + di_rswot**2 + n_r1**2 + n_orb_r1**2 + n_t_r2**2)
 T_ssh_r3 = np.sqrt(SSB_r**2 + dd_r**2 + dw_r**2 + di_r**2 + n_r**2 + n_orb_r**2 + n_t_r**2)
 
-data_screen1 = SSB_data_comb + dd_data_comb + dw_data_comb + di_data_comb + n_data_comb + n_timing_error_comb
-data_screen3 = SSB_data_insar + dd_data_insar + dw_data_insar + di_data_insar + n_data_insar + n_timing_error_insar
+#data_screen1 = SSB_data_comb + dd_data_comb + dw_data_comb + di_data_comb + n_data_comb + n_timing_error_comb
+#data_screen3 = SSB_data_insar + dd_data_insar + dw_data_insar + di_data_insar + n_data_insar + n_timing_error_insar
 
 
-# PLOT THE RESULT
-if np.size(T_ssh_r1)>1:
-    plt.figure()
-    plt.plot(scale_az/1000, T_ssh_r1)
-    plt.plot(scale_az/1000, T_ssh_r3)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Grid spacing in along-track (km)', fontsize=16)
-    plt.ylabel('Total accuracy (cm)', fontsize=16)
-    plt.title('Total error analysis')
-    plt.legend(['Relative error in Concept #1 & #2','Relative error in Concept #3'])
-       #    plt.ylim(0, 2)
-    plt.grid() 
-
-if ssbplot:
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, SSB_data_comb)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('SSB errors for nadir-looking altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, SSB_data_insar)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('SSB errors for swath altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-if ddplot:
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, dd_data_comb)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Dry delay errors for nadir-looking altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, dd_data_insar)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Dry delay errors for swath altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-if dwplot:
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, dw_data_comb)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Wet delay errors for nadir-looking altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, dw_data_insar)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Wet delay errors for swath altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-if diplot:
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, di_data_comb)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Ionospheric delay errors for nadir-looking altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, di_data_insar)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Ionospheric delay errors for swath altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-if alti_noise_plot:
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, n_data_comb)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Altimeter noise for nadir-looking altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, n_data_insar)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Altimeter noise for swath altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-if orbitplot:
-    plt.figure()
-    plt.pcolor(np.degrees(grid_swath), gridx/1000, n_orb_data_insar)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Incidence angle (deg)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Orbit error related error for swath altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-    plt.figure()
-    plt.pcolor(gridx/1000, gridy/1000, n_orb_data_comb)
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.xlabel('Ground-range (km)', fontsize=16)
-    plt.ylabel('Along-track (km)', fontsize=16)
-    plt.title('Orbit error related error for nadir-looking altimeter', fontsize=16)
-    plt.grid()
-    tt = plt.colorbar()
-    tt.set_label('cm', fontsize=16)
-    tt.ax.tick_params(labelsize=16)
-
- 
+## PLOT THE RESULT
+#if np.size(T_ssh_r1)>1:
+#    plt.figure()
+#    plt.plot(scale_az/1000, T_ssh_r1)
+#    plt.plot(scale_az/1000, T_ssh_r3)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Grid spacing in along-track (km)', fontsize=16)
+#    plt.ylabel('Total accuracy (cm)', fontsize=16)
+#    plt.title('Total error analysis')
+#    plt.legend(['Relative error in Concept #1 & #2','Relative error in Concept #3'])
+#       #    plt.ylim(0, 2)
+#    plt.grid() 
+#
+#if ssbplot:
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, SSB_data_comb)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('SSB errors for nadir-looking altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, SSB_data_insar)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('SSB errors for swath altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#if ddplot:
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, dd_data_comb)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Dry delay errors for nadir-looking altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, dd_data_insar)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Dry delay errors for swath altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#if dwplot:
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, dw_data_comb)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Wet delay errors for nadir-looking altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, dw_data_insar)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Wet delay errors for swath altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#if diplot:
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, di_data_comb)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Ionospheric delay errors for nadir-looking altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, di_data_insar)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Ionospheric delay errors for swath altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#if alti_noise_plot:
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, n_data_comb)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Altimeter noise for nadir-looking altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, n_data_insar)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Altimeter noise for swath altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#if orbitplot:
+#    plt.figure()
+#    plt.pcolor(np.degrees(grid_swath), gridx/1000, n_orb_data_insar)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Incidence angle (deg)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Orbit error related error for swath altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#    plt.figure()
+#    plt.pcolor(gridx/1000, gridy/1000, n_orb_data_comb)
+#    plt.xticks(fontsize=16)
+#    plt.yticks(fontsize=16)
+#    plt.xlabel('Ground-range (km)', fontsize=16)
+#    plt.ylabel('Along-track (km)', fontsize=16)
+#    plt.title('Orbit error related error for nadir-looking altimeter', fontsize=16)
+#    plt.grid()
+#    tt = plt.colorbar()
+#    tt.set_label('cm', fontsize=16)
+#    tt.ax.tick_params(labelsize=16)
+#
+# 

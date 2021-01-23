@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 from constants import constants as const
 import ocs_io as tpio
 from orbit.orbit import orbit_com
-from performance.cal_functions import cell_calculate, area_cal
+from cal_functions import cell_calculate, area_cal
 
 # THIS FUNCTION OFFERS THE PERFORMANCE ANALYSIS FOR CUBESAT SYSTEMS        
 def performance_tool(cfg_file, concept, SAR_mode_enable, interleaved_mode_enable):

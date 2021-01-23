@@ -18,7 +18,7 @@ import ocs_io as tpio
 from performance.performance import performance_tool
 
 # Setting up paths
-cfg_file = r"D:\research\TU Delft\programs\Alticube_tool\Alticubes'tool\parameters.cfg"
+cfg_file = r"D:\research\TU Delft\programs\ALTCUBTOOL\cfg\parameters.cfg"
 cfg = tpio.ConfigFile(cfg_file)
 concept = 'Specular Constellation'##"#cfg.sim.concept'Comb Constellation'#
 (P_r1, P_a1, ac1, raw_data_rate1, proc_rate1) = performance_tool(cfg_file, concept, 

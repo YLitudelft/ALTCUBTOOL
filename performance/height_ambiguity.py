@@ -14,7 +14,7 @@ from orbit.orbit import orbit_com
 import ocs_io as tpio
 
 # Setting up the paths
-cfg_file = r"D:\research\TU Delft\programs\Alticube_tool\Alticubes'tool\parameters.cfg"
+cfg_file = r"D:\research\TU Delft\programs\ALTCUBTOOL\cfg\parameters.cfg"
 cfg = tpio.ConfigFile(cfg_file)
 baseline = np.linspace(0.5,1000, 1000)
 

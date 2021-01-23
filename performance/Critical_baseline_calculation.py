@@ -14,7 +14,7 @@ from orbit.orbit import orbit_com
 import ocs_io as tpio
 
 # Setting up the paths
-cfg_file = r"D:\research\TU Delft\programs\Alticube_tool\Alticubes'tool\parameters.cfg"
+cfg_file = r"D:\research\TU Delft\programs\ALTCUBTOOL\cfg\parameters.cfg"
 cfg = tpio.ConfigFile(cfg_file)
 
 # lambda [m]
@@ -192,20 +192,20 @@ if np.size(off_nadir)>1:
         plt.legend(leg)
     #    plt.ylim(0, 2)
         plt.grid() 
-    elif np.size(cfg.loss.SNR)>1:
-        # antenna & peak power   
-        # plot figure        
-        leg = []
-        plt.figure()
-        for i in range(np.size(cfg.radar.off_nadir)):
-            plt.plot(cfg.loss.SNR, cross_res[:,i])
-            leg = np.append(leg, ["Incidence angle=%.1f deg"%(incidence_angle[i])])
-        plt.xticks(fontsize=16)
-        plt.yticks(fontsize=16)
-        plt.xlabel('SNR (dB)', fontsize=16)
-        plt.ylabel('Cross-track resolution (m)', fontsize=16)
-    #    plt.title(concept)
-        plt.legend(leg)
-    #    plt.ylim(0, 2)
-        plt.grid() 
+#    elif np.size(cfg.loss.SNR)>1:
+#        # antenna & peak power   
+#        # plot figure        
+#        leg = []
+#        plt.figure()
+#        for i in range(np.size(cfg.radar.off_nadir)):
+#            plt.plot(cfg.loss.SNR, cross_res[:,i])
+#            leg = np.append(leg, ["Incidence angle=%.1f deg"%(incidence_angle[i])])
+#        plt.xticks(fontsize=16)
+#        plt.yticks(fontsize=16)
+#        plt.xlabel('SNR (dB)', fontsize=16)
+#        plt.ylabel('Cross-track resolution (m)', fontsize=16)
+#    #    plt.title(concept)
+#        plt.legend(leg)
+#    #    plt.ylim(0, 2)
+#        plt.grid() 
         
